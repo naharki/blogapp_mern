@@ -1,6 +1,7 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
+import { API } from '../../service/api.js';
 import styled from '@emotion/styled';
-import {useState} from 'react';
+import { useState } from 'react';
 
 const Component = styled(Box)`
   width: 400px;
@@ -47,38 +48,72 @@ const Text = styled(Typography)`
   font-size: 14px;
 `;
 
+const signupInitialValues = {
+  name: '',
+  username: '',
+  password: '',
+};
+
 const Login = () => {
   const imageURL =
     'https://www.sesta.it/wp-content/uploads/2021/03/logo-blog-sesta-trasparente.png';
   const [account, toggleAccount] = useState('login');
+  const [signup, setsignup] = useState(signupInitialValues);
 
-  const toggleSignup =() => {
-   account === 'signup' ? toggleAccount('login') : toggleAccount("signup")
+  const toggleSignup = () => {
+    account === 'signup' ? toggleAccount('login') : toggleAccount('signup');
   };
-    return (
+
+  const onInputChange = (e) => {
+    setsignup({ ...signup, [e.target.name]: e.target.value });
+  };
+
+  const signupUser =async () => {
+  let response = await  API.userSignup(signup);
+  }
+   
+  return (
     <Component>
       <Box>
         <Image src={imageURL} alt="LogoImage" />
-       { account === 'login' ? (
-        <Wrapper>
-          <TextField variant="standard" label="Enter user name" />
-          <TextField variant="standard" label="Enter password"/>
-          <LoginButton variant="contained">Login</LoginButton>
-          <Text style={{ textAlign: 'center' }}> OR </Text>
-          <SignupButton onClick={() => toggleSignup()}>Create an account</SignupButton>
-        </Wrapper>
-       ) : (
-        <Wrapper>
-          <TextField variant="standard" label="Enter name" />
-          <TextField variant="standard" label="Enter user name" />
-          <TextField variant="standard" label="Enter password" />
-          <SignupButton >Signup</SignupButton>
-          <Text style={{ textAlign: 'center' }}> OR </Text>
-          <LoginButton variant="contained" onClick={() => toggleSignup()}>Already have an account</LoginButton> 
-        </Wrapper>
-
-)}
-    </Box>
+        {account === 'login' ? (
+          <Wrapper>
+            <TextField variant="standard" label="Enter user name" />
+            <TextField variant="standard" label="Enter password" />
+            <LoginButton variant="contained">Login</LoginButton>
+            <Text style={{ textAlign: 'center' }}> OR </Text>
+            <SignupButton onClick={() => toggleSignup()}>
+              Create an account
+            </SignupButton>
+          </Wrapper>
+        ) : (
+          <Wrapper>
+            <TextField
+              variant="standard"
+              onChange={(e) => onInputChange(e)}
+              name="name"
+              label="Enter name"
+            />
+            <TextField
+              variant="standard"
+              onChange={(e) => onInputChange(e)}
+              name="username"
+              label="Enter user name"
+            />
+            <TextField
+              variant="standard"
+              onChange={(e) => onInputChange(e)}
+              name="password"
+              label="Enter password"
+            />
+            <SignupButton onClick={() => signupUser()}>Signup</SignupButton>
+            <Text style={{ textAlign: 'center' }}> OR </Text>
+            <LoginButton variant="contained" onClick={() => toggleSignup()}>
+              Already have an account
+            </LoginButton>
+          </Wrapper>
+        )}
+      </Box>
     </Component>
   );
 };
