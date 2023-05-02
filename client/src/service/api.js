@@ -7,8 +7,8 @@ const axiosInstance = axios.create({
   baseURL: API_URL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'content-type': 'application/json',
+  }
 });
 
 axiosInstance.interceptors.request.use(
@@ -33,7 +33,10 @@ axiosInstance.interceptors.response.use(
 
 const processResponse = (response) => {
   if (response?.status === 200) {
-    return { isSuccess: true, data: response.data };
+    return { 
+        isSuccess : true,
+         data: response.data 
+        }
   } else {
     return {
       isFailure: true,
@@ -44,7 +47,7 @@ const processResponse = (response) => {
   }
 }
 
-const processError =(error) => {
+const processError =async (error) => {
 if(error.response){
     //request made and server responded with error 
 console.log("Error in response:", error.toJSON());
@@ -93,7 +96,7 @@ for(const [key, value] of Object.entries(SERVICE_URLS)) {
                     showDownloadProgress(percentageCompleted)
                 }
             }
-        })
+        });
     }
 
     export {API};
